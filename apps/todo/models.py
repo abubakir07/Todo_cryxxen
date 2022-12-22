@@ -9,7 +9,7 @@ class Todo(models.Model):
     is_completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='todos', blank=True, null=True)
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='User')
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Todo"
