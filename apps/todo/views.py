@@ -1,5 +1,5 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
-# from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated 
@@ -23,11 +23,14 @@ class TodoCreateAPIView(generics.CreateAPIView):
 class TodoListAPIView(generics.ListAPIView):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
-    # permission_classes = [IsAuthenticated]
-    filter_backends = [filters.DjangoFilterBackend, filters.SearchFilter]
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_class = ['title', 'created_at', 'is_completed']
     ordering_fields = ['is_completed', 'created_at']
     search_fields = ['title', 'created_at']
+    # search_fields = TodoFilter  
+
+
     def get_queryset(self):
         return Todo.objects.filter(user=self.request.user)
 
@@ -43,6 +46,7 @@ class TodoDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class TodoDeleteAllAPIView(generics.DestroyAPIView):
+    queryset = Todo.objects.all()
     serializer_class = TodoSerializer
     permission_classes = [IsOwner]
 
